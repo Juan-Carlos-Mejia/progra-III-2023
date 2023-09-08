@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>server en python</title>
+    <title>Server en python</title>
 </head>
 <body>
-     saludo <input type="text"
-     name="txtNombre" id="txtNombre">
-     <div id="dvSaludo"></div>
+    Saludo: <input type="text" 
+        name="txtNombre" id="txtNombre">
+    <div id="dvSaludo"></div>
 
-     <script>
+    <script>
         document.addEventListener("DOMContentLoaded", e=>{
-            TextNombre.addEventListener("keyup", event=>{
-                fetch("http://localhost:3000", {
-                    method:"POST",
+            txtNombre.addEventListener("keyup", event=>{
+                fetch("https://orange-space-halibut-x55jxr65qqcvr59-3000.app.github.dev", {
+                    method: "POST",
                     body: txtNombre.value
-                }).then(resp=>resp.text()).then(resp=>{
-                    dvSaludo.InnerHTML = resp;
+                }).then(resp=>resp.text())
+                .then(resp=>{
+                    dvSaludo.innerHTML = resp;
                 });
             });
         });
-     </script>
+    </script>
 </body>
 </html>
