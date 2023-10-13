@@ -1,29 +1,29 @@
-import mysql.connector
-from mysql.connector import Error
+import crud_academica
+db = crud_academica.crud()
 
-class crud:
-    def __init__(self):
-        print("Inicializando la conexion con la base de datos")
-        self.conexion = mysql.connector.connect(
-            host="localhost", 
-            user="root", 
-            password="", 
-            database="db_academico")
-        if self.conexion.is_connected():
-            print("Conexion exitosa")
-        else:
-            print("Error de conexion")
-
-    def consultar(self, sql):
-        cursor = self.conexion.cursor(dictionary=True)
-        cursor.execute(sql)
-        return cursor.fetchall()
+class crud_alumnos:
+    def consultar_alumnos(self, buscar):
+        return db.consultar("select * from alumnos where codigo like'%"+ buscar["buscar"] 
+            +"%' or nombre like'%"+ buscar["buscar"] +"%'")
     
-    def ejecutar_consultas(self, sql, val):
-        try:
-            cursor = self.conexion.cursor()
-            cursor.execute(sql, val)
-            self.conexion.commit()
-            return "ok"
-        except Exception as e:
-            return str(e)
+    def administrar(self, alumnos):
+        if alumnos["accion"] == "nuevo":
+            sql = """
+                INSERT INTO alumnos (codigo, nombre, direccion, telefono)
+                VALUES (%s, %s, %s, %s)
+            """
+            val = (alumnos["codigo"], alumnos["nombre"], alumnos["direccion"], alumnos["telefono"])
+        elif alumnos["accion"] == "modificar":
+            sql = """
+                UPDATE alumnos
+                    SET codigo=%s, nombre=%s, direccion=%s, telefono=%s
+                WHERE idAlumno=%s
+            """
+            val = (alumnos["codigo"], alumnos["nombre"], alumnos["direccion"], alumnos["telefono"], alumnos["idAlumno"])
+        elif alumnos["accion"] == "eliminar":
+            sql = """
+                DELETE FROM alumnos
+                WHERE idAlumno=%s
+            """
+            val = (alumnos["idAlumno"],)
+        return db.ejecutar_consultas(sql, val)
